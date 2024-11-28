@@ -1,0 +1,170 @@
+---
+title: "802 Project Summary"
+authors: 
+  Maksuda Aktar Toma,
+  Jo Charbonneau,
+  Ryan Lalicker
+date: today
+date-format: long
+execute: 
+  echo: false
+  warning: false
+columns: 2
+format:
+  pdf: 
+    fig-align: center
+    fig-width: 6
+    fig-height: 4
+bibliography: references.bib
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r,  fig.pos="H"}
+#| label: data-setup
+#| echo: false
+#| eval: true
+
+# Put most/all libraries in this code chunk and read in needed data files.
+
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(naniar)
+library(reshape2)
+library(GGally)
+library(janitor)
+library(emmeans)
+library(MASS)
+library(multcomp)
+library(lme4)
+library(nnet)
+
+data <- read.csv("data.csv")
+# Placeholder of original data
+origdata <- data
+data <- data %>%
+  mutate(across(everything(), ~ ifelse(. %in% c(".", ""), NA, .)))
+
+
+```
+
+```{r,  fig.pos="H"}
+#| label: Scratch-work-1
+#| echo: false
+#| eval: false
+
+# This is for scratch work.  For example if you want to use R to figure out how many unique entries there are in a column but do not want the output to show you can use this code block.
+
+length(unique(na.omit(data$Sire)))
+length(unique(na.omit(data$Development.Treatment)))
+sum(rowSums(is.na(data)) > 0)
+rows_with_na <- sum(rowSums(is.na(data)) > 0)
+unique_entries <- unique(data$Calan.Treatment)
+num_unique <- length(unique_entries)
+frequency_table <- table(data$Calan.Treatment)
+```
+
+# Introduction
+
+
+For more information on the experiment, the data, or any other files used in this paper see our [Github page](https://github.com/maksudatoma/Stat-802-Project) which can be found at https://github.com/maksudatoma/Stat-802-Project.
+The coding languages used in the paper are R and SAS.
+The corresponding code can be found in *Appendix A - R Code* and *Appendix B - SAS Code* respectively.
+
+## Variables
+
+
+## Missing Values
+
+
+
+```{r,,fig.pos="H"}
+#| label: fig-some-label
+#| echo: false
+#| eval: true
+#| fig-cap: ""
+
+# To create a plot copy this code segment and change the name of the label above.  You can then enter the label in fig-cap.  
+
+```
+
+
+## Summary Statistics
+
+
+
+```{r,  fig.pos="H"}
+#| label: fig-two-plots
+#| echo: false
+#| eval: true
+#| fig-cap: "Two plots"
+#| layout-ncol: 2
+#| fig-subcap: 
+#|  - "First"
+#|  - "Second"
+#| fig-width: 6
+#| fig-height: 4
+
+# This allows you to make two plots side by side.  If you want to plot 4 plots you can use `#| layout-nrow: 2` to get a 2x2 setup.
+
+```
+
+
+## Exploring the Data
+
+
+
+
+# Model
+
+
+Models can be written as 
+
+$$
+Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha \beta)_{ij}+u_k+e_{ijk}
+$$ 
+
+where $Y_{ijk}$ represents the final weight for the $ith$ treatment, the $j$th sex, and the $k$th sire.
+$\mu$ represents the overall mean, while $\alpha_i$ is the fixed effect for the $ith$ treatment, $\beta_j$ is the fixed effect for the $j$th sex, and $(\alpha \beta)_{ij}$ is their interaction.
+The random sire effect is represented by $u_k$ and we assume $u_k~N(0,\sigma_k^2)$.
+We also assume the residual term $e_{ijkl}$ is distributed as $~N(0,\sigma^2)$.
+
+
+# Conclusion 
+
+From the results of both models we can say the sex of the calf had a significant impact on the final body weight of the calf.  There was not a significant result for the third trimester treatment effects though.  This indicates the treatments did not have a meaningful effect on the final body weight.  Between the two models, we found the the ANCOVA model offered clear and interpretable results, making it our recommended approach for future studies.
+
+It is important to note that in the ANCOVA model, the initial body weight of the mother was deemed significant.  In the future including more models that account for this variable and others within the data set may give cattle producers a better idea of how to maximize the weight of their calves before slaughter.
+
+
+# Future Work
+
+
+
+\newpage
+
+# References
+
+::: {#refs}
+:::
+
+\newpage
+
+# Appendix A - R Code
+
+```{r,  fig.pos="H"}
+#| label: appendix A
+#| echo: true
+#| eval: false
+
+```
+
+\newpage
+
+# Appendix B - SAS Code
+
+``` sas
+
+```
