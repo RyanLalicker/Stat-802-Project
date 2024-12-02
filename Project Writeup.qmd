@@ -41,11 +41,7 @@ library(multcomp)
 library(lme4)
 library(nnet)
 
-data <- read.csv("data.csv")
-# Placeholder of original data
-origdata <- data
-data <- data %>%
-  mutate(across(everything(), ~ ifelse(. %in% c(".", ""), NA, .)))
+data <- read.csv("rptm_simulation_export (1).csv")
 
 
 ```
@@ -57,26 +53,48 @@ data <- data %>%
 
 # This is for scratch work.  For example if you want to use R to figure out how many unique entries there are in a column but do not want the output to show you can use this code block.
 
-length(unique(na.omit(data$Sire)))
-length(unique(na.omit(data$Development.Treatment)))
-sum(rowSums(is.na(data)) > 0)
-rows_with_na <- sum(rowSums(is.na(data)) > 0)
-unique_entries <- unique(data$Calan.Treatment)
-num_unique <- length(unique_entries)
-frequency_table <- table(data$Calan.Treatment)
+
 ```
 
 # Introduction
 
-
-For more information on the experiment, the data, or any other files used in this paper see our [Github page](https://github.com/maksudatoma/Stat-802-Project) which can be found at https://github.com/maksudatoma/Stat-802-Project.
-The coding languages used in the paper are R and SAS.
+This paper summarizes the consulting that was done for our assigned STAT 802 group.  For more information on the experiment, the data, or any other files used in this paper see our [Github page](https://github.com/maksudatoma/Stat-802-Project) which can be found at https://github.com/maksudatoma/Stat-802-Project.  The coding languages used in the paper are R and SAS.
 The corresponding code can be found in *Appendix A - R Code* and *Appendix B - SAS Code* respectively.
 
-## Variables
+
+# Initial Meetings
+
+The first meeting with our clients was on September 13th.  We discussed their project and what kind of data they were going to be looking at. They detailed to us their project, which is looking at the levels of Salmonella in beef jerky at different inoculations and thicknesses. Prior to the meeting they sent us what their variables would be, which gave us a good idea of what might be the best experimental design.  The group informed us they were avoiding a completely randomized design (CRD) at the request of their professor. With that in mind, we suggested other possible models.  
+
+Later, after receiving feedback from Dr. Howard and several PhD students within the statistics department, we suggested adding a time component to the experiment as well as creating multiple batches to replicate each treatment combination.  This lead to us suggested a mixed model for the analysis approach.
+
+In both the initial meeting and the follow-up session the clients were more than happy to implement our suggestions.  In the end the experiment involved two thickness levels (one-fourth and one-eighth of an inch), two inoculation methods (dry and wet), and five evenly spaced time points were measurements were taken (weeks 1-5) creating twenty entries per batch. The exact number of batches would not be known until after the power analysis, found in the *Power Analysis* section.  We provided the client an example dataset we created to give them a better idea of what the end product may look like.  This dataset had five batches.
 
 
-## Missing Values
+# Study Objectives and Proposed Model
+
+The clients were most interested in the effect of the thickness levels, the inoculation method, and their interaction had on the Salmonella levels.  In the final model we included the week effect and subsequent interactions as well.  These variables are the fixed effects in the proposed mixed model.
+
+The other variable included in the experiment is the batch number.  This is a repeated measure and is therefore treated as a random variable.  As mentioned above, the exact number of batches needed was unknown prior to the power analysis, but five was used as a starting value.
+
+The model can be written in the form 
+
+$$
+Y_{ijkl} = \mu + \alpha_i + \beta_j + \tau_k + (\alpha \beta)_{ij}+(\alpha \tau)_{ik}+(\beta \tau)_{jk}+(\alpha \beta \tau)_{ijk} + u_l + e_{ijkl}
+$$ 
+
+Here, $Y_{ijkl}$ is the Salmonella level and $\mu$ is the overall mean.  The fixed effects are represented by $\alpha_i$ for the effect of the $i$th inoculation method, $\beta_j$ for the effect of the $j$th thickness level, and $\tau_k$ for the effect of the $k$th week.  The interaction effect of the $i$th inoculation method and the $j$th thickness level is represented by $(\alpha \beta)_{ij}$, with the other two-way interactions following this form.  The three-way interaction between all fixed effects is represented as $(\alpha \beta \tau)_{ijk}$.  The random effect for batches is represented by $u_l$, which we assume are distributed as $u_l$~$N(0,\sigma_u^2)$.  Lastly, the residuals are represented by $e_{ijkl}$, which we assume can be distributed as $e_{ijkl}$~$N(0,\sigma^2)$.
+
+
+# Power Analysis
+
+**NEED TO WRITE MORE HERE**
+**MAYBE INCLUDE THEIR SOURCE FOR TRT MEANS**
+
+Using code found in *Appendix B - SAS Code*
+(@trtmeans)
+
+# Simulating Data
 
 
 
@@ -91,8 +109,9 @@ The corresponding code can be found in *Appendix A - R Code* and *Appendix B - S
 ```
 
 
-## Summary Statistics
+# Data Analysis
 
+## Summary Statistics
 
 
 ```{r,  fig.pos="H"}
@@ -115,31 +134,13 @@ The corresponding code can be found in *Appendix A - R Code* and *Appendix B - S
 ## Exploring the Data
 
 
+## Evaluating SAS Output
 
-
-# Model
-
-
-Models can be written as 
-
-$$
-Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha \beta)_{ij}+u_k+e_{ijk}
-$$ 
-
-where $Y_{ijk}$ represents the final weight for the $ith$ treatment, the $j$th sex, and the $k$th sire.
-$\mu$ represents the overall mean, while $\alpha_i$ is the fixed effect for the $ith$ treatment, $\beta_j$ is the fixed effect for the $j$th sex, and $(\alpha \beta)_{ij}$ is their interaction.
-The random sire effect is represented by $u_k$ and we assume $u_k~N(0,\sigma_k^2)$.
-We also assume the residual term $e_{ijkl}$ is distributed as $~N(0,\sigma^2)$.
 
 
 # Conclusion 
 
-From the results of both models we can say the sex of the calf had a significant impact on the final body weight of the calf.  There was not a significant result for the third trimester treatment effects though.  This indicates the treatments did not have a meaningful effect on the final body weight.  Between the two models, we found the the ANCOVA model offered clear and interpretable results, making it our recommended approach for future studies.
 
-It is important to note that in the ANCOVA model, the initial body weight of the mother was deemed significant.  In the future including more models that account for this variable and others within the data set may give cattle producers a better idea of how to maximize the weight of their calves before slaughter.
-
-
-# Future Work
 
 
 
